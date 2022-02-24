@@ -1,0 +1,1 @@
+body{padding:0;margin:0}#app{font-family:Avenir,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-align:center}#app,#nav{color:#2c3e50}#nav{position:absolute;top:0;left:0;right:0;padding:10px;z-index:100000;font-weight:700}#nav span:hover{cursor:pointer}#nav .active{color:#f1fff9}
