@@ -12,7 +12,8 @@
     "sourceMap": true,
     "baseUrl": ".",
     "types": [
-      "webpack-env"
+      "webpack-env",
+      "three"
     ],
     "paths": {
       "@/*": [
@@ -32,7 +33,7 @@
     "src/**/*.vue",
     "tests/**/*.ts",
     "tests/**/*.tsx"
-  ],
+, "src/shader/doodlePhyShader.ts"  ],
   "exclude": [
     "node_modules"
   ]

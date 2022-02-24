@@ -1,3 +1,4 @@
+/* eslint-disable */
 module.exports = {
   root: true,
   env: {
@@ -13,6 +14,14 @@ module.exports = {
   },
   rules: {
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off'
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+    'semi': ['error', 'always'],
+    'indent': 'off',
+    'no-tabs': ['error', { allowIndentationTabs: true }],
+    'no-mixed-spaces-and-tabs': 'off',
+    'no-unused-expressions': 'off',
+    '@typescript-eslint/no-explicit-any': 'off',
+    '@typescript-eslint/no-non-null-assertion': 'off',
+    '@typescript-eslint/no-non-null-asserted-optional-chain': 'off'
   }
 }
