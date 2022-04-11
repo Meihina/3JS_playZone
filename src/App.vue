@@ -1,8 +1,14 @@
 <template>
     <div id="app">
         <div id="nav">
-            <span @click="jump('/DoodleNormal')" :class="{ active: jug('/DoodleNormal') }">巴别塔-普通正交</span> |
-            <span @click="jump('/DoodlePhy')" :class="{ active: jug('/DoodlePhy') }">巴别塔-物理透视</span>
+            <span @click="jump('CSSPlayZone')" :class="{ active: jug('CSSPlayZone') }">CSS实验中心</span> |
+            <span @click="jump('DoodleNormal')" :class="{ active: jug('DoodleNormal') }">巴别塔-普通正交</span> |
+            <span @click="jump('DoodlePhy')" :class="{ active: jug('DoodlePhy') }">巴别塔-物理透视</span> |
+            <!-- <span @click="jump('Plane')" :class="{ active: jug('Plane') }">平面shader测试中心</span> | -->
+            <span @click="jump('RubiksCube')" :class="{ active: jug('RubiksCube') }">魔方</span> |
+            <span @click="jump('SphereHeaven')" :class="{ active: jug('SphereHeaven') }">球形天堂</span> |
+            <span @click="jump('Bezier')" :class="{ active: jug('Bezier') }">贝塞尔</span> |
+            <span @click="jump('Persona')" :class="{ active: jug('Persona') }">Persona</span>
         </div>
         <router-view/>
     </div>
@@ -12,17 +18,20 @@
 import { defineComponent } from '@vue/composition-api';
 
 export default defineComponent({
-    name: 'doodle-phy',
+    name: 'app',
 	components: {},
     setup () {
         // 使用window来切换路由，可以直接干掉所有ThreeJS的残留对象，保护内存
 		const jump = (path: string): void => {
-            window.location.href = 'http://' + window.location.host + path;
+            const p = window.location.href.split('/');
+            p[p.length - 1] = path;
+            window.location.href = p.join('/');
         };
 
         const jug = (path: string): boolean => {
-            console.log(window.location.pathname, path);
-            return window.location.pathname === path;
+            const p = window.location.pathname.split('/');
+            const pathname = p[p.length - 1];
+            return path === pathname;
         };
 
         return {
@@ -66,5 +75,25 @@ body {
     .active {
         color: #f1fff9;
     }
+}
+</style>
+
+<style lang="less">
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    background-color: rgba(0, 0, 0, 0);
+}
+
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    border-radius: 10px;
+    background-color: rgba(0, 0, 0, 0);
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+    background-color: rgba(41, 41, 41, 0.35);
 }
 </style>

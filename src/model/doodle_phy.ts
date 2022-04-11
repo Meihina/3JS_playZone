@@ -104,6 +104,7 @@ export default class Doodle extends Base {
         );
         this.rendererInit();
         this.controlsInit();
+        this.controls.maxPolarAngle = Math.PI / 2 - 0.01; // 限制垂直最大视角
         this.clock = new THREE.Clock();
 
         this.baseCreate();
@@ -200,6 +201,7 @@ export default class Doodle extends Base {
 
         const geometry = new THREE.BoxBufferGeometry(x, y, z);
         const material = new THREE.MeshLambertMaterial(defaultMaterialArg);
+
         // const material = new THREE.ShaderMaterial(
         //     {
         //         uniforms: this.uniforms,
@@ -380,7 +382,7 @@ export default class Doodle extends Base {
     handleScoreCount (): void {
         let passCount = 0;
         const list = Object.values(this.itemCollideList);
-        for (const v of Object.values(this.itemCollideList)) {
+        for (const v of list) {
             if (v) {
                 passCount += 1;
             }

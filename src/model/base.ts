@@ -1,7 +1,9 @@
 import * as THREE from 'three';
 import * as CANNON from 'cannon-es';
+import { throttle } from 'lodash';
 
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { Vector2 } from 'three';
 
 export enum sceneType {
     PHYSI = 'physi',
@@ -13,10 +15,20 @@ export enum cameraType {
     OrthographicCamera = 'OrthographicCamera'
 }
 
+const getNormalizedMousePos = (e: MouseEvent | Touch) => {
+    return {
+        x: (e.clientX / window.innerWidth) * 2 - 1,
+        y: -(e.clientY / window.innerHeight) * 2 + 1
+    };
+};
+
 export default class Total {
     container: HTMLElement | null = null;
     aspectRatio = 0;
     zoom = 2;
+    mousePos: THREE.Vector2 = new Vector2(0, 0);
+    mouseSpeed = 0;
+    raycaster = new THREE.Raycaster();
 
     // 通常参数
     controls: any = null;
@@ -40,6 +52,7 @@ export default class Total {
 
     sceneInit (type: sceneType): void {
         this.scene = new THREE.Scene();
+        this.trackMousePos();
 
         if (type === sceneType.PHYSI) {
             const geometryPlane = new THREE.PlaneBufferGeometry(1000, 1000);
@@ -121,7 +134,6 @@ export default class Total {
 
     controlsInit (): void {
         this.controls = new OrbitControls(this.camera, this.renderer?.domElement);
-        this.controls.maxPolarAngle = Math.PI / 2 - 0.01; // 限制垂直最大视角
     }
 
     groundBodyConnect (): void {
@@ -132,5 +144,70 @@ export default class Total {
     clear (): void {
         this.scene?.clear();
         this.scene?.remove();
+    }
+
+    axisHelper (): void {
+        const helper = new THREE.AxesHelper(30);
+        helper.position.y = 0;
+        this.scene?.add(helper);
+    }
+
+    gridHelper (): void {
+        const gridHelper = new THREE.GridHelper(100, 30, 0x2C2C2C, 0x888888);
+        gridHelper.position.y = 0;
+        this.scene!.add(gridHelper);
+    }
+
+    trackMousePos (): void {
+        window.addEventListener('mousemove', throttle(
+            (e) => {
+                this.setMousePos(e);
+            }, 1000 / 60
+        ));
+        window.addEventListener(
+            'touchstart',
+            throttle(
+                (e: TouchEvent) => {
+                    this.setMousePos(e.touches[0]);
+                }, 1000 / 60
+            ),
+            { passive: false }
+        );
+        window.addEventListener('touchmove', throttle(
+                (e: TouchEvent) => {
+                    this.setMousePos(e.touches[0]);
+                }, 1000 / 60
+            )
+        );
+    }
+
+    trackMouseSpeed (): void {
+        // https://stackoverflow.com/questions/6417036/track-mouse-speed-with-js
+        let lastMouseX = -1;
+        let lastMouseY = -1;
+        let mouseSpeed = 0;
+        window.addEventListener('mousemove', (e) => {
+            const mousex = e.pageX;
+            const mousey = e.pageY;
+            if (lastMouseX > -1) {
+                mouseSpeed = Math.max(
+                Math.abs(mousex - lastMouseX),
+                Math.abs(mousey - lastMouseY)
+                );
+                this.mouseSpeed = mouseSpeed / 100;
+            }
+            lastMouseX = mousex;
+            lastMouseY = mousey;
+        });
+        document.addEventListener('mouseleave', () => {
+            this.mouseSpeed = 0;
+        });
+      }
+
+    // 设置鼠标位置
+    setMousePos (e: MouseEvent | Touch): void {
+        const { x, y } = getNormalizedMousePos(e);
+        this.mousePos.x = x;
+        this.mousePos.y = y;
     }
 }

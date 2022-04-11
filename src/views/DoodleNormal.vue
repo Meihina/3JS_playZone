@@ -79,7 +79,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 #container {
 	position: absolute;
 	width: 100%;
