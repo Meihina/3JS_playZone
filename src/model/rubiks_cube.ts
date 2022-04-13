@@ -1,9 +1,7 @@
 import * as THREE from 'three';
-import * as TWEEN from '@tweenjs/tween.js';
 import { ParametricGeometry } from 'three/examples/jsm/geometries/ParametricGeometry';
-import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry';
 
-import Base, { sceneType, cameraType } from './base';
+import Base, { sceneType, cameraType, TIntersects } from './base';
 import { cubeVertexShader, cubeFragmentShader } from '../shader/cube';
 
 // u 和 v 会对应递增到 1
@@ -50,7 +48,6 @@ export default class Cube extends Base {
     defaultCameraLookAt: THREE.Vector3 = new THREE.Vector3(0, 0, 0);
     defaultCameraPos: THREE.Vector3 = new THREE.Vector3(5, 5, 5);
     defaultColor: number[] = [250, 250, 250];
-    clock: THREE.Clock | null = null;
 
     meshs: TCube[] = [];
 
@@ -61,27 +58,17 @@ export default class Cube extends Base {
     init (): void {
         this.sceneInit(sceneType.NORMAL);
         this.lightInit({ x: 50, y: 120, z: 150 });
-
-        // this.axisHelper();
-        // this.gridHelper();
-
-        const { defaultCameraLookAt: l, defaultCameraPos: p } = this;
         this.cameraInit(
             cameraType.PerspectiveCamera,
-            { px: p.x, py: p.y, pz: p.z },
-            { lx: l.x, ly: l.y, lz: l.z }
+            this.defaultCameraPos,
+            this.defaultCameraLookAt
         );
-
         this.rendererInit();
         this.controlsInit();
-        this.clock = new THREE.Clock();
-
+        this.clockInit();
         this.rubiksInit();
         this.trackMouseSpeed();
-
-        window.addEventListener('mousedown', () => {
-            this.rayCasterWork();
-        });
+        this.trackRaycaster(this.rayCasterWork);
     }
 
     boxCreate (initTime: number): TCube {
@@ -90,13 +77,7 @@ export default class Cube extends Base {
         const displacementMap2 = loader.load(displacementMapUrl2);
         const displacementMap3 = loader.load(displacementMapUrl3);
 
-        // const geometry = new THREE.SphereBufferGeometry(10, 64, 64);
         const geometry = new ParametricGeometry(sphube, 1000, 50);
-        // const geometry = new RoundedBoxGeometry(0.45, 0.45, 0.45, 20, 0.1);
-        // const geometry = new THREE.BoxGeometry(0.25, 0.25, 0.25, 50, 50, 50);
-        // const geometry = new THREE.BufferGeometry();
-        // geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-
         const material = new THREE.ShaderMaterial({
             vertexShader: cubeVertexShader,
             fragmentShader: cubeFragmentShader,
@@ -143,13 +124,9 @@ export default class Cube extends Base {
         });
     }
 
-    rayCasterWork (): void {
-        this.raycaster.setFromCamera(this.mousePos, this.camera!);
-        const intersects = this.raycaster.intersectObjects(this.scene?.children!, true);
-        if (intersects.length > 0) {
-            // 选中第一个射线相交的物体
-            ((intersects[0].object as TCube).material as THREE.ShaderMaterial).uniforms.uBaseColor.value = new THREE.Vector3(0.579, 0.388, 0.5);
-        }
+    rayCasterWork (intersects: TIntersects): void {
+        // 选中第一个射线相交的物体
+        ((intersects[0].object as TCube).material as THREE.ShaderMaterial).uniforms.uBaseColor.value = new THREE.Vector3(0.579, 0.388, 0.5);
     }
 
     animate (): void {

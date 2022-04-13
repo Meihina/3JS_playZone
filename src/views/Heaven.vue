@@ -1,39 +1,21 @@
 <template>
-	<div>
-		<div id="container"></div>
-	</div>
+    <sketch :sketch-model="SphereHeaven"></sketch>
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref } from '@vue/composition-api';
+import { defineComponent } from '@vue/composition-api';
 import SphereHeaven from '../model/sphere_heaven';
+import Sketch from '../components/Sketch.vue';
 
 export default defineComponent({
     name: 'heaven',
-	components: {},
+	components: {
+        Sketch
+    },
     setup () {
-        const heaven = ref<SphereHeaven | null>(null);
-
-        const init = (): void => {
-            heaven.value = new SphereHeaven(
-                document.querySelector('#container') as HTMLElement
-            );
-            heaven.value.init();
-            heaven.value.animate();
+        return {
+            SphereHeaven
         };
-
-        onMounted(() => {
-            init();
-        });
     }
 });
 </script>
-
-<style lang="less" scoped>
-#container {
-	position: absolute;
-	width: 100%;
-	height: 100vh;
-    background: rgb(39, 41, 40);
-}
-</style>

@@ -27,20 +27,37 @@
                 <div class="p5sketch"></div>
             </div>
 
-            <!-- 纯css方案 -->
-            <div class="scss">
-                <div class="point" v-for="(ele, idx) in new Array(220)" :key="idx"></div>
+            <!-- css + dom方案 -->
+            <div class="cssWithDom">
+                <div
+                    class="point"
+                    v-for="(ele, idx) in new Array(100)"
+                    :key="idx"
+                    :style="pointsStyle(idx / 100)"
+                ></div>
+                <div class="cur" :style="{
+                    left: `${currentPoint[0] - 11}px`,
+                    bottom: `${59 - currentPoint[1]}px`
+                }"> 😅 </div>
             </div>
-            <div class="less"></div>
+
+            <!-- box-shadow方案 -->
+            <div class="boxShadow">
+                <!-- <div class="point" v-for="(ele, idx) in new Array(220)" :key="idx"></div> -->
+            </div>
 
             <!-- webgl -->
-            <div class="webGL"></div>
+            <!-- <div class="webGL"></div> -->
 
-            <!-- webgl上层库 -->
-            <div class="three"></div>
+            <!-- webgl上层库 —— ThreeJS -->
+            <div class="three">
+                <div id="three-container"></div>
+            </div>
 
             <!-- WTM直接叫GPU出来接客 -->
-            <div class="shader-p5"></div>
+            <div class="shader-three">
+                <div id="three-container-shader"></div>
+            </div>
         </div>
     </div>
 </template>
@@ -49,6 +66,9 @@
 import { computed, defineComponent, onMounted, reactive, ref } from '@vue/composition-api';
 import { Bezier } from '../maths/bezier';
 import P5 from 'p5';
+
+import BezierPlane from '../model/bezier_three_plane';
+import BezierShader from '../model/bezier_three_shader';
 
 export default defineComponent({
     setup () {
@@ -80,12 +100,12 @@ export default defineComponent({
         });
 
         // ================== SVG方案主要代码 ==================
-        const svgParams = computed(() => {
+        const svgParams = computed<string>(() => {
             const { p1, p2, cp1 } = keyPoints;
             return `M${p1.join(',')} Q${cp1.join(',')} ${p2.join(',')}`;
         });
 
-        const curSvgParams = computed(() => {
+        const curSvgParams = computed<string>(() => {
             const { p1 } = keyPoints;
             return `M${p1.join(',')} Q${currentCP.value.join(',')} ${currentPoint.value.join(',')}`;
         });
@@ -180,8 +200,40 @@ export default defineComponent({
             sketch.value = new P5(p5Sketch, dom);
         };
 
-        // ================== 纯webgl方案主要代码 ==================
-        // ...
+        // ================== css + dom方案主要代码 ==================
+        const pointsStyle = computed(() => {
+            return (t: number): Record<string, string> => {
+                const { p1, p2, cp1 } = keyPoints;
+                const p = nBezier.twoBezier(t, p1, p2, cp1);
+                const color = currentPoint.value[0] > p[0] ? 'orange' : 'white';
+                return {
+                    left: `${p[0]}px`,
+                    bottom: `${70 - p[1]}px`,
+                    background: color,
+                    'box-shadow': `0 0 5px ${color}`
+                };
+            };
+        });
+
+        // ================== threeJS方案主要代码 ==================
+        const threePlaneBezier = ref<BezierPlane | null>(null);
+        const handleThreeBezierPlaneInit = () => {
+            threePlaneBezier.value = new BezierPlane(
+                document.querySelector('#three-container') as HTMLElement
+            );
+            threePlaneBezier.value.init(keyPoints);
+            threePlaneBezier.value.animate();
+        };
+
+        // ================== threeJS方案主要代码 ==================
+        const threePlaneShader = ref<BezierShader | null>(null);
+        const handleThreeShaderShaderInit = () => {
+            threePlaneShader.value = new BezierShader(
+                document.querySelector('#three-container-shader') as HTMLElement
+            );
+            threePlaneShader.value.init(keyPoints);
+            threePlaneShader.value.animate();
+        };
 
         onMounted(() => {
             function ani () {
@@ -190,19 +242,29 @@ export default defineComponent({
                 }
                 p.value += 0.005;
 
+                if (threePlaneBezier.value) {
+                    threePlaneBezier.value.p = p.value;
+                    threePlaneBezier.value.currentPoint = currentPoint.value;
+                    threePlaneBezier.value.currentCP = currentCP.value;
+                }
+
                 canvasDraw();
 
                 requestAnimationFrame(ani);
             }
             ani();
 
+            handleThreeBezierPlaneInit();
+            handleThreeShaderShaderInit();
             p5Init();
         });
 
         return {
             svgParams,
             curSvgParams,
-            currentPoint
+            currentPoint,
+            nBezier,
+            pointsStyle
         };
     }
 });
@@ -235,20 +297,69 @@ export default defineComponent({
 </style>
 
 <style lang="less" scoped>
-</style>
+.three {
+    text-align: center;
+}
 
-<style lang="scss" scoped>
-.scss {
+#three-container-shader, #three-container {
     display: inline-block;
     width: 220px;
     height: 70px;
 }
 
-.point {
-    width: 1px;
-    height: 5px;
-    border-radius: 50%;
-    background: white;
+.cssWithDom {
+    position: relative;
     display: inline-block;
+    width: 220px;
+    height: 70px;
+
+    .point {
+        width: 6px;
+        height: 4px;
+        border-radius: 50%;
+        background: white;
+        display: inline-block;
+        position: absolute;
+    }
+
+    .cur {
+        position: absolute;
+        width: 22px;
+        height: 22px;
+    }
+}
+</style>
+
+<style lang="scss" scoped>
+// @function shadowSetColor($vx, $vy, $direction, $count, $color) {
+//     $shadow : 0 0 0 0 $color;
+
+//     @for $i from 0 through $count {
+
+//         $color: lighten($color, .5);
+
+//         $x: sin($i / 8) * $vx * $direction;
+//         $y: $i * $vy;
+
+//         $shadow: $shadow, #{$x} #{$y} 0 0 $color;
+//     }
+
+//     @return $shadow;
+// }
+
+@function twoBezier($t, $x1, $y1, $x2, $y2, $cx, $cy) {
+    $x: (1 - $t) * (1 - $t) * $x1 + 2 * $t * (1 - $t) * $cx + $t * $t * $x2;
+    $y: (1 - $t) * (1 - $t) * $y1 + 2 * $t * (1 - $t) * $cy + $t * $t * $y2;
+    @debug ($x, $y);
+    @return ($x, $y);
+}
+
+.scss {
+    width: 5px;
+    height: 5px;
+    margin: 0 auto;
+    background: green;
+    border-radius: 50%;
+    box-shadow: shadowSetColor(8px, 2px, -1, 100, green);
 }
 </style>

@@ -1,7 +1,4 @@
 import * as THREE from 'three';
-import * as TWEEN from '@tweenjs/tween.js';
-import { ParametricGeometry } from 'three/examples/jsm/geometries/ParametricGeometry';
-// import { RoundedBoxGeometry } from 'three/examples/jsm/geometriexs/RoundedBoxGeometry';
 
 import Base, { sceneType, cameraType } from './base';
 
@@ -22,26 +19,19 @@ export default class Cube extends Base {
     ball: TCube | null = null;
 
     time = 0;
-    raycaster = new THREE.Raycaster();
     pointer = new THREE.Vector2();
 
     init (): void {
         this.sceneInit(sceneType.NORMAL);
         this.lightInit({ x: 50, y: 120, z: 150 });
-
-        // this.axisHelper();
-        // this.gridHelper();
-
-        const { defaultCameraLookAt: l, defaultCameraPos: p } = this;
         this.cameraInit(
             cameraType.PerspectiveCamera,
-            { px: p.x, py: p.y, pz: p.z },
-            { lx: l.x, ly: l.y, lz: l.z }
+            this.defaultCameraPos,
+            this.defaultCameraLookAt
         );
-
         this.rendererInit();
         this.controlsInit();
-        this.clock = new THREE.Clock();
+        this.clockInit();
 
         this.ball = this.ballCreate();
     }

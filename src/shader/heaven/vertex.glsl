@@ -14,18 +14,18 @@ const float PI = 3.141592653;
 vec3 lightPosition = vec3(80., 80., 80.);
 
 vec3 displace(vec3 p) {
-    vec3 pointDirection = normalize(p);
+    vec3 pointDirect = normalize(p);
     
-    vec3 n11 = pointDirection * 2.5;
-    vec3 n12 = vec3(uTime);
-    float noise1 = snoise(n11 + n12);
+    vec3 directDimension1 = pointDirect * 2.5;
+    vec3 timeDimension1 = vec3(uTime);
+    float noise1 = snoise(directDimension1 + timeDimension1);
     
-    vec3 n21 = pointDirection * 1.5;
-    vec3 n22 = vec3(sin(uTime)) * 1.5;
-    float noise2 = snoise(n21 + n22);
+    vec3 directDimension2 = pointDirect * 1.5;
+    vec3 timeDimension2 = vec3(uTime) * 1.5;
+    float noise2 = snoise(directDimension2 + timeDimension2);
     
     float noise = noise1 * noise2;
-    vec3 displacement = pointDirection * (noise + length(p));
+    vec3 displacement = pointDirect * (noise + length(p));
     return displacement;
 }
 

@@ -3,7 +3,6 @@ import * as CANNON from 'cannon-es';
 import * as TWEEN from '@tweenjs/tween.js';
 
 import Base, { sceneType, cameraType } from './base';
-// import { doodlePhyFragmentShader, doodlePhyVertexShader } from '../shader/doodlePhyShader';
 
 enum EMoveWayType {
     POSITIVE = 'positive',
@@ -81,7 +80,6 @@ export default class Doodle extends Base {
     curInitDiffHeight = 30;
 
     // 着色器相关
-    clock: THREE.Clock | null = null;
     uniforms: any = {
         u_time: {
             value: 0
@@ -99,13 +97,13 @@ export default class Doodle extends Base {
         this.lightInit({ x: 150, y: 300, z: 75 });
         this.cameraInit(
             cameraType.PerspectiveCamera,
-            { px: 350, py: 350, pz: 350 },
-            { lx: 0, ly: 25, lz: 0 }
+            { x: 350, y: 350, z: 350 },
+            { x: 0, y: 25, z: 0 }
         );
+        this.clockInit();
         this.rendererInit();
         this.controlsInit();
         this.controls.maxPolarAngle = Math.PI / 2 - 0.01; // 限制垂直最大视角
-        this.clock = new THREE.Clock();
 
         this.baseCreate();
     }
@@ -201,15 +199,6 @@ export default class Doodle extends Base {
 
         const geometry = new THREE.BoxBufferGeometry(x, y, z);
         const material = new THREE.MeshLambertMaterial(defaultMaterialArg);
-
-        // const material = new THREE.ShaderMaterial(
-        //     {
-        //         uniforms: this.uniforms,
-        //         vertexShader: doodlePhyVertexShader,
-        //         fragmentShader: doodlePhyFragmentShader
-        //     }
-        // );
-
         const mesh = new THREE.Mesh(geometry, material);
         mesh.position.set(0, this.baseY + y * this.score + this.curInitDiffHeight, 0);
         mesh.castShadow = true;

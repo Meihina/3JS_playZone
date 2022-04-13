@@ -63,11 +63,10 @@ export default class Doodle extends Base {
         this.sceneInit(sceneType.NORMAL);
         this.lightInit({ x: 50, y: 120, z: 150 });
 
-        const { defaultCameraLookAt: l, defaultCameraPos: p } = this;
         this.cameraInit(
             cameraType.OrthographicCamera,
-            { px: p.x, py: p.y, pz: p.z },
-            { lx: l.x, ly: l.y, lz: l.z }
+            this.defaultCameraPos,
+            this.defaultCameraLookAt
         );
         this.camera?.scale.set(2, 2, 2);
 

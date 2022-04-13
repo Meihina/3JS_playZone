@@ -12,42 +12,37 @@ const routes: Array<RouteConfig> = [
 	{
 		path: '/Bezier',
 		name: 'Bezier',
-		component: () => import(/* webpackChunkName: "about" */ '../views/Bezier.vue')
+		component: () => import('../views/Bezier.vue')
 	},
 	{
 		path: '/Persona',
 		name: 'Persona',
-		component: () => import(/* webpackChunkName: "about" */ '../views/Persona.vue')
+		component: () => import('../views/Persona.vue')
 	},
 	{
 		path: '/DoodleNormal',
 		name: 'DoodleNormal',
-		component: () => import(/* webpackChunkName: "about" */ '../views/DoodleNormal.vue')
+		component: () => import('../views/DoodleNormal.vue')
 	},
 	{
 		path: '/DoodlePhy',
 		name: 'DoodlePhy',
-		component: () => import(/* webpackChunkName: "about" */ '../views/DoodlePhy.vue')
-	},
-	{
-		path: '/Plane',
-		name: 'Plane',
-		component: () => import(/* webpackChunkName: "about" */ '../views/Plane.vue')
+		component: () => import('../views/DoodlePhy.vue')
 	},
 	{
 		path: '/RubiksCube',
 		name: 'RubiksCube',
-		component: () => import(/* webpackChunkName: "about" */ '../views/DoodleRubiksCube.vue')
+		component: () => import('../views/DoodleRubiksCube.vue')
 	},
 	{
 		path: '/SphereHeaven',
 		name: 'SphereHeaven',
-		component: () => import(/* webpackChunkName: "about" */ '../views/Heaven.vue')
+		component: () => import('../views/Heaven.vue')
 	},
 	{
 		path: '/CSSPlayZone',
 		name: 'CSSPlayZone',
-		component: () => import(/* webpackChunkName: "about" */ '../views/CSSPlayZone.vue')
+		component: () => import('../views/CSSPlayZone.vue')
 	}
 ];
 

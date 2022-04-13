@@ -15,6 +15,9 @@ export enum cameraType {
     OrthographicCamera = 'OrthographicCamera'
 }
 
+type TPos = Record<string, number> | THREE.Vector3;
+export type TIntersects = THREE.Intersection < THREE.Object3D < THREE.Event >> [];
+
 const getNormalizedMousePos = (e: MouseEvent | Touch) => {
     return {
         x: (e.clientX / window.innerWidth) * 2 - 1,
@@ -36,6 +39,7 @@ export default class Total {
     scene: THREE.Scene | null = null;
     renderer: THREE.WebGLRenderer | null = null;
     light: THREE.DirectionalLight | THREE.PointLight | null = null;
+    clock: THREE.Clock | null = null;
 
     // 物理世界参数
     protected world: CANNON.World = new CANNON.World({
@@ -78,7 +82,7 @@ export default class Total {
         }
     }
 
-    lightInit ({ x, y, z }: Record<string, number>): void {
+    lightInit ({ x, y, z }: TPos): void {
         const light = new THREE.PointLight(new THREE.Color('#ffffff'), 1, 1000);
         light.position.set(x, y, z);
         this.scene!.add(light);
@@ -94,8 +98,8 @@ export default class Total {
 
     cameraInit (
         type: cameraType,
-        { px, py, pz }: Record<string, number>,
-        { lx, ly, lz }: Record<string, number>
+        { x: px, y: py, z: pz }: TPos,
+        { x: lx, y: ly, z: lz }: TPos
     ): void {
         if (type === cameraType.PerspectiveCamera) {
             this.camera = new THREE.PerspectiveCamera(
@@ -111,7 +115,7 @@ export default class Total {
                 zoom * aspectRatio,
                 zoom,
                 -zoom,
-                0.01,
+                0,
                 1000
             );
         }
@@ -133,7 +137,11 @@ export default class Total {
     }
 
     controlsInit (): void {
-        this.controls = new OrbitControls(this.camera, this.renderer?.domElement);
+        this.controls = new OrbitControls(this.camera!, this.renderer?.domElement);
+    }
+
+    clockInit (): void {
+        this.clock = new THREE.Clock();
     }
 
     groundBodyConnect (): void {
@@ -156,6 +164,16 @@ export default class Total {
         const gridHelper = new THREE.GridHelper(100, 30, 0x2C2C2C, 0x888888);
         gridHelper.position.y = 0;
         this.scene!.add(gridHelper);
+    }
+
+    trackRaycaster (cb: (intersects: TIntersects) => any): void {
+        window.addEventListener('mousedown', () => {
+            this.raycaster.setFromCamera(this.mousePos, this.camera!);
+            const intersects = this.raycaster.intersectObjects(this.scene?.children!, true);
+            if (intersects.length > 0) {
+                cb(intersects);
+            }
+        });
     }
 
     trackMousePos (): void {

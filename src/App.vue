@@ -4,9 +4,8 @@
             <span @click="jump('CSSPlayZone')" :class="{ active: jug('CSSPlayZone') }">CSS实验中心</span> |
             <span @click="jump('DoodleNormal')" :class="{ active: jug('DoodleNormal') }">巴别塔-普通正交</span> |
             <span @click="jump('DoodlePhy')" :class="{ active: jug('DoodlePhy') }">巴别塔-物理透视</span> |
-            <!-- <span @click="jump('Plane')" :class="{ active: jug('Plane') }">平面shader测试中心</span> | -->
             <span @click="jump('RubiksCube')" :class="{ active: jug('RubiksCube') }">魔方</span> |
-            <span @click="jump('SphereHeaven')" :class="{ active: jug('SphereHeaven') }">球形天堂</span> |
+            <span @click="jump('SphereHeaven')" :class="{ active: jug('SphereHeaven') }">球形天堂-beta</span> |
             <span @click="jump('Bezier')" :class="{ active: jug('Bezier') }">贝塞尔</span> |
             <span @click="jump('Persona')" :class="{ active: jug('Persona') }">Persona</span>
         </div>
@@ -16,28 +15,15 @@
 
 <script lang="ts">
 import { defineComponent } from '@vue/composition-api';
+import { useHref } from './hooks/useHref';
 
 export default defineComponent({
     name: 'app',
-	components: {},
     setup () {
-        // 使用window来切换路由，可以直接干掉所有ThreeJS的残留对象，保护内存
-		const jump = (path: string): void => {
-            const p = window.location.href.split('/');
-            p[p.length - 1] = path;
-            window.location.href = p.join('/');
-        };
-
-        const jug = (path: string): boolean => {
-            const p = window.location.pathname.split('/');
-            const pathname = p[p.length - 1];
-            return path === pathname;
-        };
-
+        const href = useHref();
         return {
-			jump,
-            jug
-		};
+            ...href
+        };
     }
 });
 </script>
