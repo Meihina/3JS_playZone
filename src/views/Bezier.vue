@@ -76,6 +76,7 @@ export default defineComponent({
             p1: [10, 60],
             p2: [210, 10],
             cp1: [160, 60]
+
         });
         const p = ref<number>(0); // 百分比
         const nBezier: Bezier = new Bezier();
