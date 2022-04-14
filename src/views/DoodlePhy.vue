@@ -14,7 +14,7 @@
             @click="handleAdd"
             :style="textSizeStyle"
         >
-            增加下一块积木
+            增加下一块积木块
         </div>
 	</div>
 </template>
