@@ -38,7 +38,6 @@ export default class BezierThreePlane extends Base {
     keyPoints: TKeyPoints = {};
     currentPoint: number[] = [0, 0];
     currentCP: number[] = [0, 0];
-
     currentMesh: TMesh | null = null;
 
     init (keyPoints: TKeyPoints): void {
@@ -46,6 +45,7 @@ export default class BezierThreePlane extends Base {
 
         this.sceneInit(sceneType.NORMAL);
         this.cameraInit(
+            1,
             cameraType.PerspectiveCamera,
             this.defaultCameraPos,
             this.defaultCameraLookAt
@@ -54,6 +54,21 @@ export default class BezierThreePlane extends Base {
 
         this.curveLineCreate(this.keyPoints, 'white', 1.2);
     }
+
+    // pointsInit (number: number): Record<string, number[]> {
+    //     const points = [];
+    //     const colors = [];
+    //     const { p1, p2, cp1 } = this.keyPoints;
+    //     for (let i = 0; i < 1; i += 1 / number) {
+    //         const point = nBezier.twoBezier(i, p1, p2, cp1);
+    //         points.push(point[0], point[1], 0);
+    //         colors.push(255, 255, 255);
+    //     }
+    //     return {
+    //         points,
+    //         colors
+    //     };
+    // }
 
     killMesh (): void {
         this.currentMesh!.geometry.dispose();

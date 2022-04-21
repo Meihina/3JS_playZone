@@ -47,18 +47,13 @@ type TCube
 export default class Cube extends Base {
     defaultCameraLookAt: THREE.Vector3 = new THREE.Vector3(0, 0, 0);
     defaultCameraPos: THREE.Vector3 = new THREE.Vector3(5, 5, 5);
-    defaultColor: number[] = [250, 250, 250];
 
     meshs: TCube[] = [];
 
-    time = 0;
-    raycaster = new THREE.Raycaster();
-    pointer = new THREE.Vector2();
-
     init (): void {
         this.sceneInit(sceneType.NORMAL);
-        this.lightInit({ x: 50, y: 120, z: 150 });
         this.cameraInit(
+            1,
             cameraType.PerspectiveCamera,
             this.defaultCameraPos,
             this.defaultCameraLookAt
@@ -66,9 +61,12 @@ export default class Cube extends Base {
         this.rendererInit();
         this.controlsInit();
         this.clockInit();
-        this.rubiksInit();
         this.trackMouseSpeed();
-        this.trackRaycaster(this.rayCasterWork);
+        this.trackRaycaster(this.rayCasterWork, this);
+
+        this.rubiksInit();
+
+        this.ani(this.animate, this);
     }
 
     boxCreate (initTime: number): TCube {
@@ -130,18 +128,10 @@ export default class Cube extends Base {
     }
 
     animate (): void {
-        requestAnimationFrame(this.animate.bind(this));
-        const t = this.clock?.getDelta();
-
         this.meshs.map((mesh) => {
-            (mesh.material as THREE.ShaderMaterial).uniforms.uTime.value += t;
+            (mesh.material as THREE.ShaderMaterial).uniforms.uTime.value += this.currentTime;
             (mesh.material as THREE.ShaderMaterial).uniforms.uMouse.value = this.mousePos;
             (mesh.material as THREE.ShaderMaterial).uniforms.uMouseSpeed.value = this.mouseSpeed;
         });
-
-        this.renderer?.render(
-            this.scene as THREE.Object3D<THREE.Event>,
-            this.camera as THREE.Camera
-        );
     }
 }

@@ -12,19 +12,13 @@ type TCube
 export default class Cube extends Base {
     defaultCameraLookAt: THREE.Vector3 = new THREE.Vector3(0, 0, 0);
     defaultCameraPos: THREE.Vector3 = new THREE.Vector3(25, 25, 25);
-    defaultColor: number[] = [250, 250, 250];
-    clock: THREE.Clock | null = null;
 
-    meshs: TCube[] = [];
     ball: TCube | null = null;
-
-    time = 0;
-    pointer = new THREE.Vector2();
 
     init (): void {
         this.sceneInit(sceneType.NORMAL);
-        this.lightInit({ x: 50, y: 120, z: 150 });
         this.cameraInit(
+            1,
             cameraType.PerspectiveCamera,
             this.defaultCameraPos,
             this.defaultCameraLookAt
@@ -34,6 +28,8 @@ export default class Cube extends Base {
         this.clockInit();
 
         this.ball = this.ballCreate();
+
+        this.ani(this.animate, this);
     }
 
     ballCreate (): TCube {
@@ -59,16 +55,6 @@ export default class Cube extends Base {
     }
 
     animate (): void {
-        requestAnimationFrame(this.animate.bind(this));
-        const t = this.clock?.getDelta();
-
-        // this.meshs.map((mesh) => {
-            (this.ball!.material as THREE.ShaderMaterial).uniforms.uTime.value += t;
-        // });
-
-        this.renderer?.render(
-            this.scene as THREE.Object3D<THREE.Event>,
-            this.camera as THREE.Camera
-        );
+        (this.ball!.material as THREE.ShaderMaterial).uniforms.uTime.value += this.currentTime;
     }
 }

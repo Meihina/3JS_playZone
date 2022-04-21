@@ -28,7 +28,7 @@ const getNormalizedMousePos = (e: MouseEvent | Touch) => {
 export default class Total {
     container: HTMLElement | null = null;
     aspectRatio = 0;
-    zoom = 2;
+    zoom = 1;
     mousePos: THREE.Vector2 = new Vector2(0, 0);
     mouseSpeed = 0;
     raycaster = new THREE.Raycaster();
@@ -40,6 +40,7 @@ export default class Total {
     renderer: THREE.WebGLRenderer | null = null;
     light: THREE.DirectionalLight | THREE.PointLight | null = null;
     clock: THREE.Clock | null = null;
+    currentTime = 0;
 
     // 物理世界参数
     protected world: CANNON.World = new CANNON.World({
@@ -97,6 +98,7 @@ export default class Total {
     }
 
     cameraInit (
+        zoom: number,
         type: cameraType,
         { x: px, y: py, z: pz }: TPos,
         { x: lx, y: ly, z: lz }: TPos
@@ -109,7 +111,7 @@ export default class Total {
                 10000
             );
         } else {
-            const { zoom, aspectRatio } = this;
+            const { aspectRatio } = this;
             this.camera = new THREE.OrthographicCamera(
                 -zoom * aspectRatio,
                 zoom * aspectRatio,
@@ -144,6 +146,19 @@ export default class Total {
         this.clock = new THREE.Clock();
     }
 
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    ani (cb: () => void, obj: any): any {
+        this.currentTime = this.clock?.getDelta() as number;
+
+        cb.call(obj);
+
+        this.renderer?.render(
+            this.scene as THREE.Object3D<THREE.Event>,
+            this.camera as THREE.Camera
+        );
+        requestAnimationFrame(this.ani.bind(this, cb, obj));
+    }
+
     groundBodyConnect (): void {
         this.groundMesh!.position.copy(this.groundBody!.position as any);
         this.groundMesh!.quaternion.copy(this.groundBody!.quaternion as any);
@@ -166,12 +181,13 @@ export default class Total {
         this.scene!.add(gridHelper);
     }
 
-    trackRaycaster (cb: (intersects: TIntersects) => any): void {
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    trackRaycaster (cb: (intersects: TIntersects) => any, obj: any): void {
         window.addEventListener('mousedown', () => {
             this.raycaster.setFromCamera(this.mousePos, this.camera!);
             const intersects = this.raycaster.intersectObjects(this.scene?.children!, true);
             if (intersects.length > 0) {
-                cb(intersects);
+                cb.call(obj, intersects);
             }
         });
     }

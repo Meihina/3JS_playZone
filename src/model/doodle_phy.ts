@@ -96,6 +96,7 @@ export default class Doodle extends Base {
         this.sceneInit(sceneType.PHYSI);
         this.lightInit({ x: 150, y: 300, z: 75 });
         this.cameraInit(
+            2,
             cameraType.PerspectiveCamera,
             { x: 350, y: 350, z: 350 },
             { x: 0, y: 25, z: 0 }

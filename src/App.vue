@@ -15,7 +15,7 @@
 
 <script lang="ts">
 import { defineComponent } from '@vue/composition-api';
-import { useHref } from './hooks/useHref';
+import { useHref } from './hooks/app/useHref';
 
 export default defineComponent({
     name: 'app',

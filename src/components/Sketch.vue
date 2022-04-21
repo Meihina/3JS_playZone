@@ -5,24 +5,22 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref } from '@vue/composition-api';
+import { defineComponent, onMounted } from '@vue/composition-api';
 
 export default defineComponent({
     name: 'sketch',
     props: {
         SketchModel: {
-            type: Object as any,
+            type: Function as any,
             required: true
         }
     },
     setup (props) {
-        const sketch = ref<any>(null);
         const init = (): void => {
-            sketch.value = new props.SketchModel(
+            const sketch = new props.SketchModel(
                 document.querySelector('#container') as HTMLElement
             );
-            sketch.value.init();
-            sketch.value.animate();
+            sketch.init();
         };
 
         onMounted(() => {

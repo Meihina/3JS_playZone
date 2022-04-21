@@ -64,6 +64,7 @@ export default class Doodle extends Base {
         this.lightInit({ x: 50, y: 120, z: 150 });
 
         this.cameraInit(
+            2,
             cameraType.OrthographicCamera,
             this.defaultCameraPos,
             this.defaultCameraLookAt

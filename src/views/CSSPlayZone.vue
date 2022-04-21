@@ -66,34 +66,6 @@ export default defineComponent({
     animation: ani 3s infinite alternate;
 }
 
-// .boxShadow(@i, @vx, @vy, @offset, @shadow: 0 0 0 0 black) when (@i <= 150) {
-//     .shadow(@a, @s) when (@a = 150) {
-//         box-shadow: @s;
-//     }
-
-//     @x: sin(@i / 8 + @offset) * @vx;
-//     @y: @i * @vy;
-//     @s: @shadow, @x @y 0 0 black;
-
-//     // 在最后一次渲染时，给予 box-shadow 实际值
-//     .shadow(@i, @s);
-//     .boxShadow((@i + 1), @vx, @vy, @offset, @s);
-// }
-
-// .animeLoop(@i) when (@i <= 20) {
-//     .animeLoop((@i + 1));
-
-//     @p: @i * 5;
-//     @selector: e('@{p}%');
-//     @{selector} {
-//         .boxShadow(0, 5px, 1px, @i);
-//     }
-// }
-
-// @keyframes ani {
-//     .animeLoop(0);
-// }
-
 @pi: 3.141592653;
 
 .grahpic {
