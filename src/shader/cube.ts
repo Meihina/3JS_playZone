@@ -19,7 +19,7 @@ export const cubeVertexShader = `
         float s = sin(angle);
         float c = cos(angle);
         float oc = 1.0 - c;
-      
+
         return mat4(
             oc * axis.x * axis.x + c,           oc * axis.x * axis.y - axis.z * s,  oc * axis.z * axis.x + axis.y * s,  0.0,
             oc * axis.x * axis.y + axis.z * s,  oc * axis.y * axis.y + c,           oc * axis.y * axis.z - axis.x * s,  0.0,
@@ -32,7 +32,7 @@ export const cubeVertexShader = `
         mat4 m = rotation3dMatrix(axis, angle);
         return(m * vec4(v, 1.)).xyz;
     }
-    
+
     vec3 getEyeVector(mat4 modelMat,vec3 pos,vec3 camPos){
         vec4 worldPosition=modelMat*vec4(pos,1.);
         vec3 eyeVector=normalize(worldPosition.xyz-camPos);
@@ -81,7 +81,7 @@ export const cubeVertexShader = `
         vWorldPosition = worldPosition.xyz;
         gl_PointSize = 0.;
         gl_Position = projectionMatrix * viewMatrix * worldPosition;
-        
+
         vUv = uv;
         vNormal = roNormal; // 获得法线向量
         vPos = pos;

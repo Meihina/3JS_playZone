@@ -183,7 +183,7 @@ export default defineComponent({
 }
 </style>
 
-<style lang="scss" scoped>
+<!-- <style lang="scss" scoped>
 @function twoBezier($t, $x1, $y1, $x2, $y2, $cx, $cy) {
     $x: (1 - $t) * (1 - $t) * $x1 + 2 * $t * (1 - $t) * $cx + $t * $t * $x2;
     $y: (1 - $t) * (1 - $t) * $y1 + 2 * $t * (1 - $t) * $cy + $t * $t * $y2;
@@ -234,4 +234,4 @@ $framesNum: 200;
         }
     }
 }
-</style>
+</style> -->

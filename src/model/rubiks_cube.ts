@@ -2,7 +2,9 @@ import * as THREE from 'three';
 import { ParametricGeometry } from 'three/examples/jsm/geometries/ParametricGeometry';
 
 import Base, { sceneType, cameraType, TIntersects } from './base';
-import { cubeVertexShader, cubeFragmentShader } from '../shader/cube';
+
+import vertex from '../shader/cube/vertex.glsl';
+import fragment from '../shader/cube/fragment.glsl';
 
 // u 和 v 会对应递增到 1
 const sphube = (_u: number, _v: number, target: any) => {
@@ -77,8 +79,8 @@ export default class Cube extends Base {
 
         const geometry = new ParametricGeometry(sphube, 1000, 50);
         const material = new THREE.ShaderMaterial({
-            vertexShader: cubeVertexShader,
-            fragmentShader: cubeFragmentShader,
+            vertexShader: vertex,
+            fragmentShader: fragment,
             uniforms: {
                 uBaseColor: {
                     value: new THREE.Vector3(0.579, 0.388, 1.0)
