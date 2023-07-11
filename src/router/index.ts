@@ -43,7 +43,12 @@ const routes: Array<RouteConfig> = [
 		path: '/CSSPlayZone',
 		name: 'CSSPlayZone',
 		component: () => import('../views/CSSPlayZone.vue')
-	}
+	},
+    {
+        path: '/TransParentVideo',
+        name: 'TransParentVideo',
+        component: () => import('../views/TransParentVideo.vue')
+    }
 ];
 
 const router = new VueRouter({

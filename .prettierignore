@@ -1,0 +1,8 @@
+**/*.md
+**/*.svg
+**/*.ejs
+
+/dist/*
+/node_modules/**
+**/*.sh
+**/*.glsl

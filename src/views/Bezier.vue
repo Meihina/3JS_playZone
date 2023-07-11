@@ -4,9 +4,23 @@
             <!-- SVG -->
             <div class="svg sketch">
                 <div class="title">SVG</div>
-                <svg id="svg" width="220" height="70">
-                    <path :d="svgParams" stroke="#fff" fill="none" style="stroke-width: 6px; stroke-linecap: round;" />
-                    <path :d="curSvgParams" stroke="orange" fill="none" style="stroke-width: 6px; stroke-linecap: round;" />
+                <svg
+                    id="svg"
+                    width="220"
+                    height="70"
+                >
+                    <path
+                        :d="svgParams"
+                        stroke="#fff"
+                        fill="none"
+                        style="stroke-width: 6px; stroke-linecap: round"
+                    />
+                    <path
+                        :d="curSvgParams"
+                        stroke="orange"
+                        fill="none"
+                        style="stroke-width: 6px; stroke-linecap: round"
+                    />
                     <circle
                         :cx="currentPoint[0]"
                         :cy="currentPoint[1]"
@@ -21,7 +35,11 @@
             <!-- canvas -->
             <div class="canvas sketch">
                 <div class="title">Canvas</div>
-                <canvas id="bezier-canvas" width="220" height="70"></canvas>
+                <canvas
+                    id="bezier-canvas"
+                    width="220"
+                    height="70"
+                ></canvas>
             </div>
 
             <!-- 主要作为canvas的上层库 —— p5.js -->
@@ -40,10 +58,15 @@
                         :key="idx"
                         :style="pointsStyle(idx / 200)"
                     ></div>
-                    <div class="cur" :style="{
-                        left: `${currentPoint[0] - 11}px`,
-                        bottom: `${59 - currentPoint[1]}px`
-                    }"> 😅 </div>
+                    <div
+                        class="cur"
+                        :style="{
+                            left: `${currentPoint[0] - 11}px`,
+                            bottom: `${59 - currentPoint[1]}px`,
+                        }"
+                    >
+                        😅
+                    </div>
                 </div>
             </div>
 
@@ -51,9 +74,7 @@
             <div class="boxShadow sketch">
                 <div class="title">SCSS box-shadow</div>
                 <div class="container">
-                    <div
-                        class="scss"
-                    ></div>
+                    <div class="scss"></div>
                 </div>
             </div>
 
@@ -85,16 +106,14 @@ import { useKeyPoints } from '../hooks/bezier/useKeyPoints';
 import { useSVG, useCanvas, useP5Canvas, useCssDom, useThreeShader, useThreeTube, useP5Shader } from '../hooks/bezier';
 
 export default defineComponent({
-    setup () {
+    setup() {
         const keyPoints = reactive({
             p1: [10, 60],
             p2: [210, 10],
-            cp1: [160, 60]
+            cp1: [160, 60],
         });
 
-        const {
-            currentPoint
-        } = useKeyPoints(keyPoints);
+        const { currentPoint } = useKeyPoints(keyPoints);
 
         const SVG = useSVG(keyPoints);
         const cssDom = useCssDom(keyPoints);
@@ -107,17 +126,17 @@ export default defineComponent({
         return {
             ...SVG,
             ...cssDom,
-            currentPoint
+            currentPoint,
         };
-    }
+    },
 });
 </script>
 
 <style lang="less" scoped>
 .contain {
     position: absolute;
-	width: 100%;
-	height: 100vh;
+    width: 100%;
+    height: 100vh;
     background: rgb(39, 41, 40);
 
     .content {
@@ -148,7 +167,8 @@ export default defineComponent({
     text-align: center;
 }
 
-#three-container-shader, #three-container-tube {
+#three-container-shader,
+#three-container-tube {
     display: inline-block;
     width: 220px;
     height: 70px;
